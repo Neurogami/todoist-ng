@@ -8,7 +8,7 @@ Libs to make working with todoist.com Web API easier
 
 == FEATURES/PROBLEMS:
 
-* FIXME (list of features or problems)
+* Provides some basic operations for managing projects and items
 
 == SYNOPSIS:
 
