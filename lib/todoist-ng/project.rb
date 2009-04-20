@@ -9,7 +9,7 @@ module Neurogami
     class Project
 
       include Constants
-      
+
       @@token = 'NO_TOKEN!'
       @@labels  = nil
       @@projects = nil
@@ -18,13 +18,14 @@ module Neurogami
       def self.token= t
         @@token = t
       end
+      def self.token
+        @@token 
+      end
 
       def initialize details 
         details.each { |k,v|  eval "@#{k} = '#{v}'"}
         @items = nil
       end
-
-
 
       def uncompleted_items
         # http://todoist.com/API/getUncompletedItems?project_id=22073&token=fb5f22601ec566e48083213f7573e908a7a272e5 
@@ -150,6 +151,18 @@ module Neurogami
         # http://todoist.com/API/getLabels?token=fb5f22601ec566e48083213f7573e908a7a272e5
         return @@labels if @@labels && !reload
         @@labels = JSON.parse(open( "#{BASE_URL}/getLabels?token=#{@@token}").read)
+      end
+
+      def self.label_from_id id
+        # The todoist returns labels as a hash, where the key is a string that points
+        # to another hash, and that other hash has a ID.
+        # When you get an Item, and ask for its labels, you get that ID instead
+        # of a simple string. :(
+        # So, this method gets you the label info for that ID
+        self.labels.each do |k, v|
+          return v if v['id'].to_i == id.to_i
+        end
+        nil
       end
 
 

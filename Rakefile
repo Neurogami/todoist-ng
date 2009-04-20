@@ -21,7 +21,7 @@ task :default => 'spec:run'
 PROJ.name = 'todoist-ng'
 PROJ.authors = 'James Britt'
 PROJ.email = 'james.britt@gmail.com'
-PROJ.url = 'none'
+PROJ.url = 'http://www.gitorious.com/projects/todoist-ng'
 PROJ.version = Neurogami::Todoist::Setup::VERSION
 PROJ.rubyforge.name = 'todoist-ng'
 
