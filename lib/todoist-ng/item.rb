@@ -35,7 +35,9 @@ module Neurogami
         details.each do |k,v|  
           # 'children' might be special as well ...
           next if k == 'labels'
-          eval "@#{k} = '#{v}'"
+          v = v.to_s
+          v.gsub!( "'", '\\\\\''   )
+          eval "@#{k} = '#{v.to_s}'"
         end
 
         @labels = details['labels'] # How do we want to work with these?
