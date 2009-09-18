@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Need better filtering
+desc: Need a way to fetch items for specific projects or characteristics.
+type: :feature
+component: todoist-ng
+release: 
+reporter: james <james@neurogami.com>
+status: :unstarted
+disposition: 
+creation_time: 2009-09-18 23:38:56.614553 Z
+references: []
+
+id: 06ddea2260619d18f89c9a5f569419467be96ae5
+log_events: 
+- - 2009-09-18 23:39:01.222294 Z
+  - james <james@neurogami.com>
+  - created
+  - ""
