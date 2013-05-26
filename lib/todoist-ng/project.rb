@@ -13,6 +13,7 @@ module Neurogami
       @@token = 'NO_TOKEN!'
       @@labels  = nil
       @@projects = nil
+
       attr_accessor	:name, :id, :item_order, :cache_count, :color, :user_id, :items
 
       def self.token= t
@@ -47,7 +48,6 @@ module Neurogami
       end
 
       def completed_items offset = 0
-
         #Get completed items
         #A request is sent to getCompletedItems with project_id and optionally an offset:
         #http://todoist.com/API/getCompletedItems?project_id=22073&offset=0&token=fb5f22601ec566e48083213f7573e908a7a272e5 
@@ -71,7 +71,6 @@ module Neurogami
           STDERR.puts " \n ERROR at #{__FILE__}:#{__LINE__}: Error calling update_item\n #{e.inspect} "
           raise e
         end
-
       end
 
 
@@ -83,6 +82,7 @@ module Neurogami
         #JSON data is returned:
         #{"due_date": null, "user_id": 1, "collapsed": 0, "in_history": 0, "priority": 1, "item_order": 5, "faded": 0, "content": "Test", "indent": 1, "project_id": 22073, "id": 210873, "checked": 0, "date_string": null}
         content.strip!
+
         raise "Cannot add an empty item!" if content.empty?
         if attributes[:labels]
           attributes[:labels]  =  attributes[:labels].split(',').map{ |l| " @#{l.strip}"}.join( ' ' )
@@ -90,18 +90,17 @@ module Neurogami
           attributes.delete(:labels)
         end
         content = CGI.escape(content)
-
-
         attr_set = []
-
-        attributes.each {|k,v|
-          attr_set << "#{k.to_s}=#{CGI.escape(v.to_s)}"
-        }  
+        attributes.each {|k,v| attr_set << "#{k.to_s}=#{CGI.escape(v.to_s.strip)}" }  
 
         attr_set = attr_set.join(';')
         attr_set.strip!
         attr_set  = ";#{attr_set}" unless attr_set.empty? 
         url = "#{BASE_URL}/addItem?project_id=#{self.id};token=#{@@token};content=#{content}#{attr_set}"
+        url.sub!( /\+$/, '' )
+        
+        # warn "Add to project:\n#{url}"
+
         JSON.parse open(url).read
       end
 
@@ -130,7 +129,9 @@ module Neurogami
       def self.get_projects reload=false
         return @@projects if @@projects && !reload
         begin
-          results = JSON.parse(open( "#{BASE_URL}/getProjects?token=#{@@token}").read)
+          projects = open( "#{BASE_URL}/getProjects?token=#{@@token}").read 
+          # warn  projects
+          results = JSON.parse projects
         rescue Exception => e
           STDERR.puts " \n ERROR at #{__FILE__}:#{__LINE__}: Error getting projects using url '#{BASE_URL}/getProjects?token=#{@@token}'\n #{e.inspect} "
           raise e
